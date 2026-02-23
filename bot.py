@@ -2,7 +2,7 @@ import re
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
 
-TOKEN = "DAN_TOKEN_MOI_VAO_DAY"
+TOKEN = "7931532868:AAE1JyYv9e_FGlFgwwHwdi5eL0JsmfrLR0k"
 GROUP_1_ID = -4996375545
 GROUP_2_ID = -5172387855
 

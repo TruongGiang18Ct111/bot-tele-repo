@@ -1,11 +1,10 @@
-import telebot
 import re
+from telegram import Update
+from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
 
 TOKEN = "TOKEN_MOI_CUA_BAN"
 GROUP_1_ID = -4996375545
 GROUP_2_ID = -5172387855
-
-bot = telebot.TeleBot(TOKEN)
 
 
 def clean_message(text):
@@ -15,26 +14,18 @@ def clean_message(text):
     content_match = re.search(r"nội dung[:\s]*(.+)", text, re.IGNORECASE)
     content = content_match.group(1) if content_match else text
 
-    junk_patterns = [
-        r"Q[A-Z0-9]+",
-        r"APPMB\d*",
-        r"Trace\s*\d+",
-        r"Ma\s*GD.*",
-        r"MBVCB.*",
-        r"CT\s*tu.*",
-        r"VQR.*",
-        r"Chuyen tien.*",
-        r"\b\d{6,}\b"
-    ]
-
-    for pattern in junk_patterns:
-        content = re.sub(pattern, "", content, flags=re.IGNORECASE)
-
     content = re.sub(r"\s+", " ", content).strip()
 
     return f"💸 {money}đ\n💬 {content}"
 
 
-@bot.message_handler(func=lambda message: True)
-def handle(message):
-    if message.chat.id ==
+async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.effective_chat.id == GROUP_1_ID:
+        text = update.message.text
+        result = clean_message(text)
+        await context.bot.send_message(chat_id=GROUP_2_ID, text=result)
+
+
+app = ApplicationBuilder().token(TOKEN).build()
+app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle))
+app.run_polling()
